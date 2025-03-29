@@ -1,0 +1,116 @@
+version: "3.1"
+
+nlu:
+  - intent: greet
+    examples: |
+      - hey
+      - hello
+      - hi
+      - hello there
+      - good morning
+      - good evening
+      - hey there
+      - greetings
+
+  - intent: goodbye
+    examples: |
+      - bye
+      - goodbye
+      - see you around
+      - see you later
+      - see ya
+      - bye bye
+
+  - intent: thank
+    examples: |
+      - thanks
+      - thank you
+      - thanks a lot
+      - thank you very much
+      - appreciate it
+      - thanks for the help
+
+  - intent: bot_challenge
+    examples: |
+      - are you a bot?
+      - are you a human?
+      - am I talking to a bot?
+      - am I talking to a human?
+      - who are you?
+      - what are you?
+
+  - intent: ask_project_info
+    examples: |
+      - what is this project about?
+      - tell me about the project
+      - what does this system do?
+      - explain the project
+      - project overview
+      - what is the purpose of this project?
+      - what problem does this project solve?
+      - tell me about the crime analytics project
+      - what is real-time crime data analytics?
+
+  - intent: ask_tech_stack
+    examples: |
+      - what technologies are used?
+      - what is the tech stack?
+      - which tools are used in this project?
+      - tell me about the technologies
+      - what frameworks are used?
+      - how is the system built?
+      - what programming languages are used?
+      - tell me about the architecture
+      - what is the system architecture?
+
+  - intent: ask_crime_data
+    examples: |
+      - what crime data is used?
+      - where does the data come from?
+      - tell me about the data sources
+      - what kind of crime data is analyzed?
+      - how is the crime data collected?
+      - what APIs are used?
+      - what locations are covered?
+      - do you analyze UK crime data?
+      - do you analyze US crime data?
+      - what about Chicago crime data?
+
+  - intent: ask_anomaly_detection
+    examples: |
+      - how does the anomaly detection work?
+      - what is anomaly detection?
+      - how do you detect anomalies?
+      - what algorithm is used for anomaly detection?
+      - explain the anomaly detection model
+      - how accurate is the anomaly detection?
+      - what is considered an anomaly?
+      - how are unusual patterns detected?
+      - what is isolation forest?
+      - how is MLflow used?
+
+  - intent: ask_dashboard_features
+    examples: |
+      - what can I do with the dashboard?
+      - tell me about the dashboard
+      - what features does the dashboard have?
+      - how do I use the dashboard?
+      - what visualizations are available?
+      - can I filter the data?
+      - how do I view anomalies?
+      - what charts are available?
+      - how real-time is the dashboard?
+      - where is the dashboard hosted?
+
+  - intent: ask_help
+    examples: |
+      - help
+      - I need help
+      - what can you help me with?
+      - what can you do?
+      - what can I ask you?
+      - how can you assist me?
+      - what information can you provide?
+      - what should I ask?
+      - what topics do you know about?
+      - what are your capabilities?

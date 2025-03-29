@@ -1,0 +1,51 @@
+version: "3.1"
+
+domain:
+  version: "3.1"
+  
+  intents:
+    - greet
+    - goodbye
+    - thank
+    - bot_challenge
+    - ask_project_info
+    - ask_tech_stack
+    - ask_crime_data
+    - ask_anomaly_detection
+    - ask_dashboard_features
+    - ask_help
+
+  responses:
+    utter_greet:
+      - text: "Hello! I'm the Crime Analytics Project Bot. I can help you understand our real-time crime data analytics and anomaly detection system. How can I assist you today?"
+
+    utter_goodbye:
+      - text: "Goodbye! Feel free to return if you have more questions about our crime analytics project."
+
+    utter_thank:
+      - text: "You're welcome! I'm happy to help with any questions about our crime analytics project."
+
+    utter_iamabot:
+      - text: "I am a bot designed to provide information about the Real-Time Crime Data Analytics and Anomaly Detection project."
+
+    utter_project_info:
+      - text: "This project is a real-time crime data analytics and anomaly detection system. It ingests live crime data from multiple open-source APIs, processes it using Apache Spark and Delta Lake, trains anomaly detection models with MLflow, and provides an interactive dashboard for visualization. The system can detect unusual patterns in crime incidents across different locations."
+
+    utter_tech_stack:
+      - text: "Our tech stack includes:\n- Data Ingestion: Apache Kafka and various crime data APIs (UK Police, Chicago, NYC, LA)\n- Data Processing: Apache Spark Structured Streaming and Delta Lake\n- Model Training: MLflow, Scikit-learn\n- Model Deployment: FastAPI\n- Dashboard: Plotly Dash\n- Chatbot: Rasa\n- Containerization: Docker and Docker Compose\n- Monitoring: Prometheus and Grafana"
+
+    utter_crime_data:
+      - text: "We collect real-time crime data from multiple free, open-source APIs, including:\n- UK Police Data API for street-level crime data\n- Chicago Data Portal for incident reports\n- NYC Open Data for crime complaints\n- Los Angeles Open Data for crime incidents\nThis data is ingested through a Kafka producer and processed in real-time using Spark Structured Streaming."
+
+    utter_anomaly_detection:
+      - text: "Our anomaly detection system uses Isolation Forest algorithm to identify unusual patterns in crime data. The model is trained on historical data stored in Delta Lake and can detect unusual spikes in crime incidents, unusual distributions of crime types, and other anomalous patterns. The model is tracked and versioned using MLflow and deployed as a REST API using FastAPI."
+
+    utter_dashboard_features:
+      - text: "The interactive dashboard provides:\n- Real-time crime incident visualizations\n- Crime type distribution charts\n- Anomaly detection visualization\n- Simulated map view of incidents\n- Customizable filters for locations, crime types, and time ranges\n- Adjustable anomaly threshold\n- Summary statistics and metrics\n- Recent anomalies table\nYou can access it through Hugging Face Spaces."
+
+    utter_help:
+      - text: "I can help you with information about:\n- Project overview and objectives\n- Technical architecture and components\n- Crime data sources and processing\n- Anomaly detection methodology\n- Dashboard features and usage\nJust ask me what you'd like to know!"
+
+  session_config:
+    session_expiration_time: 60
+    carry_over_slots_to_new_session: true

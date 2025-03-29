@@ -1,0 +1,49 @@
+version: "3.1"
+
+stories:
+  - story: greet and provide project info
+    steps:
+      - intent: greet
+      - action: utter_greet
+      - intent: ask_project_info
+      - action: utter_project_info
+
+  - story: ask about tech stack
+    steps:
+      - intent: ask_tech_stack
+      - action: utter_tech_stack
+
+  - story: ask about crime data
+    steps:
+      - intent: ask_crime_data
+      - action: utter_crime_data
+
+  - story: ask about anomaly detection
+    steps:
+      - intent: ask_anomaly_detection
+      - action: utter_anomaly_detection
+
+  - story: ask about dashboard features
+    steps:
+      - intent: ask_dashboard_features
+      - action: utter_dashboard_features
+
+  - story: ask for help
+    steps:
+      - intent: ask_help
+      - action: utter_help
+
+  - story: say goodbye
+    steps:
+      - intent: goodbye
+      - action: utter_goodbye
+
+  - story: say thank you
+    steps:
+      - intent: thank
+      - action: utter_thank
+
+  - story: bot challenge
+    steps:
+      - intent: bot_challenge
+      - action: utter_iamabot

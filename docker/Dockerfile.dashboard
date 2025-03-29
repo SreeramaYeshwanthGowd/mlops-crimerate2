@@ -1,0 +1,24 @@
+# Use an official Python runtime as a parent image
+FROM python:3.9-slim
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy the requirements file into the container
+COPY requirements.dashboard.txt .
+
+# Install any needed packages specified in requirements.txt
+RUN pip install --no-cache-dir -r requirements.dashboard.txt
+
+# Copy the dashboard code
+COPY dashboard /app/dashboard
+
+# Set environment variables
+ENV PYTHONUNBUFFERED=1
+ENV API_ENDPOINT=http://model-api:5000/predict
+
+# Expose the dashboard port
+EXPOSE 8050
+
+# Run the dashboard when the container launches
+CMD ["python", "dashboard/app.py"]

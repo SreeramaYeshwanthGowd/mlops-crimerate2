@@ -82,9 +82,7 @@ app.layout = html.Div([
                 html.Label("Location"),
                 dcc.Dropdown(
                     id="location-dropdown",
-                    options=[
-                        {"label": location, "value": location} for location in df["location_name"].unique()
-                    ],
+                    options=[{"label": location, "value": location} for location in df["location_name"].unique()],
                     value=df["location_name"].unique()[0],
                     clearable=False
                 )
@@ -94,9 +92,7 @@ app.layout = html.Div([
                 html.Label("Crime Type"),
                 dcc.Dropdown(
                     id="crime-type-dropdown",
-                    options=[
-                        {"label": crime, "value": crime} for crime in df["crime_type"].unique()
-                    ],
+                    options=[{"label": crime, "value": crime} for crime in df["crime_type"].unique()],
                     value=df["crime_type"].unique()[0],
                     clearable=False
                 )
@@ -162,23 +158,17 @@ app.layout = html.Div([
             ], className="col-md-6")
         ], className="row mb-4"),
         
-        # Map view
-        html.Div([
-            html.H3("Crime Incidents Map"),
-            dcc.Graph(id="crime-map")
-        ], className="row mb-4"),
-        
-        # Chatbot link
-        html.Div([
-            html.Hr(),
-            html.Div([
-                html.A(
-                    html.Button("Chat with Project Bot", className="btn btn-primary btn-lg"),
-                    href="http://localhost:5005",
-                    target="_blank"
-                )
-            ], className="text-center")
-        ], className="row mt-4 mb-4")
+        # Chatbot link (optional, commented out)
+        # html.Div([
+        #     html.Hr(),
+        #     html.Div([
+        #         html.A(
+        #             html.Button("Chat with Project Bot", className="btn btn-primary btn-lg"),
+        #             href="http://localhost:5005",
+        #             target="_blank"
+        #         )
+        #     ], className="text-center")
+        # ], className="row mt-4 mb-4")
     ], className="container"),
     
     # Update interval
@@ -189,13 +179,12 @@ app.layout = html.Div([
     )
 ])
 
-# Callback to update all charts and metrics
+# Callback to update charts and metrics
 @app.callback(
     [
         Output("incident-chart", "figure"),
         Output("crime-distribution", "figure"),
         Output("anomaly-distribution", "figure"),
-        Output("crime-map", "figure"),
         Output("anomaly-metrics", "children"),
         Output("recent-anomalies", "children")
     ],
@@ -267,28 +256,6 @@ def update_charts(n_intervals, location, crime_type, time_range, anomaly_thresho
         annotation_text="Threshold"
     )
     
-    # Create map view (simplified with scatter plot)
-    # In a real implementation, this would use actual geo coordinates
-    map_df = df[df["location_name"] == location].copy()
-    map_df["x"] = np.random.normal(0, 1, len(map_df))
-    map_df["y"] = np.random.normal(0, 1, len(map_df))
-    
-    map_fig = px.scatter(
-        map_df,
-        x="x",
-        y="y",
-        color="crime_type",
-        size="incident_count",
-        hover_data=["timestamp", "incident_count", "anomaly_score"],
-        title=f"Crime Incidents in {location} (Simulated Map)"
-    )
-    map_fig.update_layout(
-        xaxis_title="",
-        yaxis_title="",
-        xaxis_showticklabels=False,
-        yaxis_showticklabels=False
-    )
-    
     # Create anomaly metrics
     total_incidents = filtered_df["incident_count"].sum()
     anomaly_count = filtered_df[filtered_df["is_anomaly"]]["incident_count"].sum()
@@ -329,7 +296,8 @@ def update_charts(n_intervals, location, crime_type, time_range, anomaly_thresho
             className="table table-striped table-sm"
         )
     
-    return incident_fig, crime_dist_fig, anomaly_dist_fig, map_fig, metrics_html, recent_anomalies_html
+    # Return updated figures and components
+    return incident_fig, crime_dist_fig, anomaly_dist_fig, metrics_html, recent_anomalies_html
 
 # Run the app
 if __name__ == "__main__":

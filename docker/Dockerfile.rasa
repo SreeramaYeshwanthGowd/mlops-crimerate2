@@ -1,23 +1,24 @@
 # Use an official Python runtime as a parent image
-FROM python:3.9
+# FROM python:3.9
 
-# Set the working directory in the container
-WORKDIR /app
+# # Set the working directory in the container
+# WORKDIR /app
 
-# Copy the requirements file into the container
-COPY requirements.rasa.txt .
+# # Copy the requirements file into the container
+# COPY requirements.rasa.txt .
 
-# Install any needed packages specified in requirements.txt
-RUN pip install --no-cache-dir -r requirements.rasa.txt
+# # Install any needed packages specified in requirements.txt
+# RUN pip install --no-cache-dir -r requirements.rasa.txt
 
-# Copy the chatbot code
-COPY chatbot /app/chatbot
+# # Copy the chatbot code
+# COPY chatbot /app/chatbot
 
-# Set environment variables
-ENV PYTHONUNBUFFERED=1
+# # Set environment variables
+# ENV PYTHONUNBUFFERED=1
 
-# Expose the Rasa API port
-EXPOSE 5005
+# # Expose the Rasa API port
+# EXPOSE 5005
 
-# Run Rasa server when the container launches
-CMD ["rasa", "run", "--enable-api", "--cors", "*", "--debug"]
+# # Run Rasa server when the container launches
+# CMD ["rasa", "run", "--enable-api", "--cors", "*", "--debug"]
+

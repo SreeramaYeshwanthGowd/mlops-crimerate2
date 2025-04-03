@@ -1,11 +1,9 @@
-import dash
+import dash 
 from dash import html, dcc, Input, Output, State
 import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
 import numpy as np
-import requests
-import json
 from datetime import datetime, timedelta
 
 # Initialize the Dash app
@@ -22,7 +20,7 @@ app = dash.Dash(
 # Set the title
 app.title = "Real-Time Crime Data Analytics"
 
-# Define API endpoints
+# Define API endpoints (not used in this mock version)
 API_ENDPOINT = "http://localhost:5000/predict"
 
 # Mock data for initial display
@@ -63,11 +61,15 @@ def generate_mock_data():
     
     return pd.DataFrame(data)
 
-# Generate mock data
-df = generate_mock_data()
+# Create initial mock data and serialize it for the dcc.Store component
+initial_df = generate_mock_data()
+initial_data = initial_df.to_json(date_format='iso', orient='split')
 
 # App layout
 app.layout = html.Div([
+    # Hidden store for data
+    dcc.Store(id="data-store", data=initial_data),
+    
     # Header
     html.Div([
         html.H1("Real-Time Crime Data Analytics and Anomaly Detection", className="display-4"),
@@ -82,8 +84,8 @@ app.layout = html.Div([
                 html.Label("Location"),
                 dcc.Dropdown(
                     id="location-dropdown",
-                    options=[{"label": location, "value": location} for location in df["location_name"].unique()],
-                    value=df["location_name"].unique()[0],
+                    options=[{"label": location, "value": location} for location in initial_df["location_name"].unique()],
+                    value=initial_df["location_name"].unique()[0],
                     clearable=False
                 )
             ], className="col-md-3"),
@@ -92,8 +94,8 @@ app.layout = html.Div([
                 html.Label("Crime Type"),
                 dcc.Dropdown(
                     id="crime-type-dropdown",
-                    options=[{"label": crime, "value": crime} for crime in df["crime_type"].unique()],
-                    value=df["crime_type"].unique()[0],
+                    options=[{"label": crime, "value": crime} for crime in initial_df["crime_type"].unique()],
+                    value=initial_df["crime_type"].unique()[0],
                     clearable=False
                 )
             ], className="col-md-3"),
@@ -119,7 +121,7 @@ app.layout = html.Div([
                     min=0,
                     max=1,
                     step=0.05,
-                    value=0.7,
+                    value=0.2,  # Updated default value to 0.2
                     marks={i/10: str(i/10) for i in range(0, 11, 2)}
                 )
             ], className="col-md-3"),
@@ -158,28 +160,16 @@ app.layout = html.Div([
             ], className="col-md-6")
         ], className="row mb-4"),
         
-        # Chatbot link (optional, commented out)
-        # html.Div([
-        #     html.Hr(),
-        #     html.Div([
-        #         html.A(
-        #             html.Button("Chat with Project Bot", className="btn btn-primary btn-lg"),
-        #             href="http://localhost:5005",
-        #             target="_blank"
-        #         )
-        #     ], className="text-center")
-        # ], className="row mt-4 mb-4")
-    ], className="container"),
-    
-    # Update interval
-    dcc.Interval(
-        id="interval-component",
-        interval=30*1000,  # in milliseconds (30 seconds)
-        n_intervals=0
-    )
+        # Update interval for auto-refresh (every 30 seconds)
+        dcc.Interval(
+            id="interval-component",
+            interval=30*1000,  # 30 seconds
+            n_intervals=0
+        )
+    ], className="container")
 ])
 
-# Callback to update charts and metrics
+# Callback to update charts and metrics using the data store
 @app.callback(
     [
         Output("incident-chart", "figure"),
@@ -193,10 +183,14 @@ app.layout = html.Div([
         Input("location-dropdown", "value"),
         Input("crime-type-dropdown", "value"),
         Input("time-range-dropdown", "value"),
-        Input("anomaly-threshold-slider", "value")
+        Input("anomaly-threshold-slider", "value"),
+        Input("data-store", "data")
     ]
 )
-def update_charts(n_intervals, location, crime_type, time_range, anomaly_threshold):
+def update_charts(n_intervals, location, crime_type, time_range, anomaly_threshold, data_store):
+    # Load data from store
+    df = pd.read_json(data_store, orient='split')
+    
     # Filter data based on inputs
     filtered_df = df[(df["location_name"] == location) & (df["crime_type"] == crime_type)].copy()
     
@@ -209,7 +203,7 @@ def update_charts(n_intervals, location, crime_type, time_range, anomaly_thresho
     else:  # 7d
         filtered_df = filtered_df[filtered_df["timestamp"] > now - timedelta(days=7)]
     
-    # Apply anomaly threshold
+    # Apply anomaly threshold filter
     filtered_df["is_anomaly"] = filtered_df["anomaly_score"] > anomaly_threshold
     
     # Create incident count chart
@@ -217,8 +211,10 @@ def update_charts(n_intervals, location, crime_type, time_range, anomaly_thresho
         filtered_df, 
         x="timestamp", 
         y="incident_count",
-        title=f"{crime_type} Incidents in {location}"
+        title=f"{crime_type} Incidents in {location}",
+        template="plotly_white"
     )
+    incident_fig.update_layout(title_x=0.5)
     
     # Add anomaly points
     anomalies = filtered_df[filtered_df["is_anomaly"]]
@@ -239,16 +235,20 @@ def update_charts(n_intervals, location, crime_type, time_range, anomaly_thresho
         x="crime_type",
         y="incident_count",
         title=f"Crime Type Distribution in {location}",
-        color="crime_type"
+        color="crime_type",
+        template="plotly_white"
     )
+    crime_dist_fig.update_layout(title_x=0.5)
     
     # Create anomaly score distribution
     anomaly_dist_fig = px.histogram(
         filtered_df,
         x="anomaly_score",
         title="Anomaly Score Distribution",
-        color_discrete_sequence=["blue"]
+        color_discrete_sequence=["blue"],
+        template="plotly_white"
     )
+    anomaly_dist_fig.update_layout(title_x=0.5)
     anomaly_dist_fig.add_vline(
         x=anomaly_threshold,
         line_dash="dash",
@@ -290,15 +290,15 @@ def update_charts(n_intervals, location, crime_type, time_range, anomaly_thresho
                         html.Th("Count"),
                         html.Th("Anomaly Score")
                     ])
-                ),
+                ), 
                 html.Tbody(rows)
             ],
             className="table table-striped table-sm"
         )
     
-    # Return updated figures and components
     return incident_fig, crime_dist_fig, anomaly_dist_fig, metrics_html, recent_anomalies_html
 
 # Run the app
 if __name__ == "__main__":
     app.run_server(debug=True, host="0.0.0.0", port=8050)
+ 

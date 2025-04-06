@@ -101,7 +101,7 @@ app.layout = html.Div([
             ], className="col-md-3"),
             
             html.Div([
-                html.Label("Time Range"),
+                html.Label("Time Range"), 
                 dcc.Dropdown(
                     id="time-range-dropdown",
                     options=[
@@ -109,7 +109,7 @@ app.layout = html.Div([
                         {"label": "Last 3 Days", "value": "3d"},
                         {"label": "Last 7 Days", "value": "7d"}
                     ],
-                    value="3d",
+                    value="7d",
                     clearable=False
                 )
             ], className="col-md-3"),
